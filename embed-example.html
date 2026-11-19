@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>דוגמת שילוב – הראשונים 41</title>
+<style>
+  body{margin:0;font-family:-apple-system,"Arial Hebrew",Arial,sans-serif;background:#f6f1ea;color:#2a221c;line-height:1.6}
+  main{max-width:1100px;margin:0 auto;padding:32px 20px}
+  .tour{width:100%;aspect-ratio:16/9;min-height:420px;border:0;border-radius:14px;display:block;background:#0c0908}
+  @media (max-width:700px){.tour{aspect-ratio:auto;height:92vh;border-radius:0;margin:0 -20px;width:calc(100% + 40px)}}
+  .row{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+  button{font:inherit;padding:8px 14px;border-radius:999px;border:1px solid #c9a36b;background:#fff;cursor:pointer}
+  p.fill{height:60vh}
+</style>
+</head>
+<body>
+<main>
+  <h1>כך הסיור נראה בתוך עמוד באתר</h1>
+  <p>זו דוגמה בלבד. מעתיקים את תגית ה‑iframe לעמוד האמיתי ומחליפים את הכתובת.</p>
+
+  <!-- ↓↓↓ זה כל מה שצריך להעתיק לאתר ↓↓↓ -->
+  <iframe class="tour" id="tour" src="index.html?title=0" title="סיור בבניין ובדירות" allow="fullscreen" allowfullscreen loading="lazy"></iframe>
+  <!-- ↑↑↑ -->
+
+  <div class="row">
+    <span>כפתורים של האתר שפותחים דירה בתוך הסיור:</span>
+    <button data-flat="p">פנטהאוז</button><button data-flat="5s">5 חדרים דרום</button><button data-flat="5n">5 חדרים צפון</button><button data-flat="g">דירת גן</button><button data-exit>חזרה לבניין</button>
+  </div>
+  <p id="status">מצב: טוען…</p>
+  <p class="fill">טקסט המשך של העמוד. גלילה כאן מזיזה את העמוד כרגיל; הסיור מגיב לגלגלת רק אחרי שלוחצים עליו, ומשחרר אותה כשהעכבר יוצא ממנו.</p>
+</main>
+<script>
+  const frame = document.getElementById('tour');
+  // האתר שולח פקודות לסיור
+  document.querySelectorAll('[data-flat]').forEach(b => b.onclick = () => frame.contentWindow.postMessage({ source: 'tour41', action: 'enter', flat: b.dataset.flat }, '*'));
+  document.querySelector('[data-exit]').onclick = () => frame.contentWindow.postMessage({ source: 'tour41', action: 'exit' }, '*');
+  // הסיור מדווח לאתר מה מוצג
+  addEventListener('message', e => { const m = e.data; if (!m || m.source !== 'tour41') return;
+    document.getElementById('status').textContent = 'מצב: ' + (m.mode === 'tour' ? 'סיור בדירה ' + m.flat : 'מבט חיצוני'); });
+</script>
+</body>
+</html>
