@@ -274,7 +274,7 @@ const TOUCH = matchMedia('(pointer:coarse)').matches;
 const GUIDE = TOUCH ? { ext: ['החליקו ימינה ושמאלה כדי להקיף את הבניין', 'געו בדירה או בשמה כדי להיכנס אליה'], tour: ['החליקו למעלה ולמטה כדי לנוע בדירה', 'בסוף הסיור חוזרים לבניין'] }
   : { ext: ['גללו בעכבר למעלה ולמטה כדי להקיף את הבניין', 'לחצו על ״לסיור״ שעל הדירה כדי להיכנס אליה'], tour: ['גללו בעכבר למעלה ולמטה כדי לנוע בדירה', 'בסוף הסיור חוזרים לבניין'] };
 let guideAt = 0, guideTimer = null;
-function guide(m) { hint.innerHTML = (TOUCH ? SWIPE : WHEEL) + '<div>' + GUIDE[m][0] + '</div><small>' + GUIDE[m][1] + '</small>';
+function guide(m) { hint.innerHTML = (TOUCH ? (m === 'ext' ? SWIPE.replace('<svg ', '<svg style="transform:rotate(90deg)" ') : SWIPE) : WHEEL) + '<div>' + GUIDE[m][0] + '</div><small>' + GUIDE[m][1] + '</small>';
   hint.style.opacity = 1; guideAt = performance.now(); clearTimeout(guideTimer); guideTimer = setTimeout(() => { hint.style.opacity = '0'; }, 8000); }
 function hideGuide() { const left = 2600 - (performance.now() - guideAt); clearTimeout(guideTimer); if (left <= 0) hint.style.opacity = '0'; else guideTimer = setTimeout(() => { hint.style.opacity = '0'; }, left); }   // always readable for a moment
 let over = 0;
