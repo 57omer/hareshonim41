@@ -1,0 +1,16 @@
+{
+  "name": "הראשונים 41 – סיור בבניין ובדירות",
+  "short_name": "הראשונים 41",
+  "lang": "he",
+  "dir": "rtl",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "any",
+  "background_color": "#0c0908",
+  "theme_color": "#0c0908",
+  "icons": [
+    { "src": "img/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "img/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

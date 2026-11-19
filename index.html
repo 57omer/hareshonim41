@@ -10,6 +10,12 @@
 <meta property="og:description" content="הקיפו את הבניין, בחרו דירה וטיילו בה.">
 <meta property="og:image" content="img/poster.jpg">
 <meta property="og:type" content="website">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="הראשונים 41">
+<link rel="apple-touch-icon" href="img/icon-180.png">
 <link rel="preload" as="image" href="img/poster.jpg">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c0908'/%3E%3Cpath d='M9 25V9h14v16M13 13h2M17 13h2M13 17h2M17 17h2M14 25v-4h4v4' fill='none' stroke='%23e8c99b' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E">
 <style>
@@ -61,7 +67,7 @@
   #map .cone{fill:rgba(214,90,40,.4)} #map .dot{fill:#d65a28;stroke:#fff;stroke-width:.08}
   #map small{display:block;font-size:11px;color:var(--soft);text-align:center;margin-top:4px}
   body.ext #map{display:none}
-  #fs{position:fixed;bottom:16px;right:62px;width:38px;height:38px;border-radius:50%;cursor:pointer;display:none;place-items:center;z-index:5;padding:0}
+  #fs{position:fixed;bottom:16px;right:62px;width:38px;height:38px;border-radius:50%;cursor:pointer;display:none;align-items:center;justify-content:center;z-index:5;padding:0}
   #fs svg{width:16px;height:16px} #fs:hover,#fs:focus-visible{background:var(--gold);color:#231a14;outline:none}
   /* inside another page: the wheel belongs to the host page until the visitor clicks the tour */
   #gate{position:fixed;inset:0;display:none;place-items:end center;z-index:7;cursor:pointer;background:rgba(12,9,8,.18)}
@@ -80,9 +86,26 @@
     #flats{bottom:auto;top:calc(var(--vt) + var(--vh) + 18px);max-width:calc(100vw - 24px)}
     #flats button{padding:11px 16px;font-size:14px}
   }
-  #turn{display:none;position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);transform:translateX(-50%);font-size:12px;color:var(--soft);white-space:nowrap;z-index:5;pointer-events:none}
+  #turn{display:none;transition:opacity .6s;position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);transform:translateX(-50%);font-size:12px;color:var(--soft);white-space:nowrap;z-index:5;pointer-events:none}
   @media (orientation:portrait) and (max-width:700px){#turn{display:block}}
-  @media (orientation:landscape) and (max-height:500px){#fs{bottom:10px;right:54px}#map,#map.tall{width:min(240px,34vw);left:10px;bottom:10px;padding:6px 6px 3px}#map small{display:none}#bar{bottom:12px;width:min(300px,40vw)}#flats{bottom:10px}#title{top:10px;right:10px;padding:7px 11px}#back{top:10px;left:10px}#help{bottom:10px;right:10px}}
+  #fs b{display:none;font-weight:500;font-size:13px}
+  #mapbtn{display:none;position:fixed;font-size:13px;padding:8px 14px;border-radius:999px;cursor:pointer;z-index:5}
+  #toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 64px);transform:translateX(-50%);padding:10px 16px;border-radius:14px;font-size:13px;line-height:1.5;text-align:center;max-width:min(360px,calc(100vw - 40px));z-index:8;opacity:0;pointer-events:none;transition:opacity .3s}
+  #toast.on{opacity:1}
+  /* phone held sideways: the picture fills the screen; controls shrink into the corners (clear of the notch), the map opens on demand, and full screen gets a labelled button */
+  @media (orientation:landscape) and (max-height:500px){
+    :root{--sl:max(10px,env(safe-area-inset-left,0px));--sr:max(10px,env(safe-area-inset-right,0px));--sb:max(8px,env(safe-area-inset-bottom,0px))}
+    #title{top:8px;right:var(--sr);padding:6px 10px} #title b{font-size:12.5px} #title span{font-size:11px}
+    #back{top:8px;left:var(--sl);padding:7px 12px}
+    #help{bottom:var(--sb);right:var(--sr);width:34px;height:34px}
+    #fs{bottom:var(--sb);right:calc(var(--sr) + 42px);width:auto;height:34px;padding:0 12px;border-radius:999px;gap:7px} #fs b{display:inline}
+    #bar{bottom:calc(var(--sb) + 14px);width:min(280px,36vw)}
+    #flats{bottom:var(--sb);max-width:calc(100vw - 260px)} #flats button{padding:7px 12px;font-size:12.5px}
+    body.tour #mapbtn{display:block;left:var(--sl);bottom:var(--sb)}
+    #map,#map.tall{left:var(--sl);bottom:calc(var(--sb) + 42px);width:min(300px,42vw);padding:6px 6px 3px} #map small{display:none}
+    body.mapoff #map{display:none !important}
+    #hint{padding:12px 16px 10px;font-size:13px} #hint svg{width:30px;height:50px;margin-bottom:6px}
+  }
   #load{position:fixed;inset:0;display:grid;place-items:center;background:#0c0908 url(img/poster.jpg) center/cover no-repeat;transition:opacity .6s;z-index:9}
   #load::before{content:"";position:absolute;inset:0;background:rgba(12,9,8,.55)}
   #load .card{position:relative;text-align:center;padding:26px 34px;border-radius:18px;min-width:min(320px,80vw)}
@@ -107,7 +130,9 @@
 <div id="hint" class="glass" role="status" aria-live="polite"></div>
 <div id="wait"><div class="glass" id="waitTxt">טוען את הדירה…</div></div>
 <button id="help" class="glass" aria-label="הצגת הנחיות התנועה">?</button>
-<button id="fs" class="glass" aria-label="מסך מלא"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 6V2h4M10 2h4v4M14 10v4h-4M6 14H2v-4"/></svg></button>
+<button id="fs" class="glass" aria-label="מסך מלא"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 6V2h4M10 2h4v4M14 10v4h-4M6 14H2v-4"/></svg><b>מסך מלא</b></button>
+<button id="mapbtn" class="glass">מפה</button>
+<div id="toast" class="glass" role="status"></div>
 <div id="gate"><span class="glass">לחצו כדי להפעיל את הסיור</span></div>
 <div id="turn">סובבו את הטלפון לרוחב לתצוגה גדולה</div>
 <div id="load"><div class="card glass"><h1>הראשונים 41</h1><p>קריית חיים · סיור בבניין ובדירות</p><div class="pb"><i id="pb"></i></div><small id="pct">טוען… 0%</small></div></div>
@@ -306,8 +331,23 @@ for (const T of TOURS) {
 $('back').addEventListener('click', leave); $('help').addEventListener('click', () => guide(mode));
 const gate = on => { active = !on; $('gate').classList.toggle('on', on); };
 $('gate').addEventListener('click', () => { gate(false); guide(mode); });
-if (EMB && HOVER) document.documentElement.addEventListener('mouseleave', () => { if (!document.fullscreenElement) gate(true); });
-if (document.fullscreenEnabled) { $('fs').style.display = 'grid'; $('fs').addEventListener('click', () => { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen().catch(() => {}); }); }
+if (EMB && HOVER) document.documentElement.addEventListener('mouseleave', () => { if (!document.fullscreenElement && !document.webkitFullscreenElement) gate(true); });
+/* full screen: the browser's own where it exists (desktop, Android, iPad); iPhones have none for web pages, so there the button explains
+   how to put the tour on the home screen, from where it opens without any browser bars */
+const root = document.documentElement, fsOn = () => document.fullscreenElement || document.webkitFullscreenElement, canFs = !!(root.requestFullscreen || root.webkitRequestFullscreen) && (document.fullscreenEnabled || document.webkitFullscreenEnabled);
+const standalone = matchMedia('(display-mode: standalone), (display-mode: fullscreen)').matches || navigator.standalone === true;
+let toastTimer = null; const toast = (html, ms = 6000) => { const t = $('toast'); t.innerHTML = html; t.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('on'), ms); };
+if ((canFs || TOUCH) && !standalone) { $('fs').style.display = 'flex';
+  $('fs').addEventListener('click', async () => {
+    if (!canFs) { toast('באייפון: לחצו על כפתור השיתוף בדפדפן ובחרו <b>״הוסף למסך הבית״</b>.<br>מהאייקון שייווצר הסיור נפתח במסך מלא.', 9000); return; }
+    if (fsOn()) { (document.exitFullscreen || document.webkitExitFullscreen).call(document); return; }
+    try { await (root.requestFullscreen || root.webkitRequestFullscreen).call(root); if (TOUCH && screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(() => {}); } catch (e) {} });
+  const sync = () => { $('fs').querySelector('b').textContent = fsOn() ? 'יציאה' : 'מסך מלא'; setTimeout(placePin, 200); };
+  document.addEventListener('fullscreenchange', sync); document.addEventListener('webkitfullscreenchange', sync); }
+/* phone held sideways: the map is closed until asked for, so it does not sit on the picture */
+const mapOff = on => { document.body.classList.toggle('mapoff', on); $('mapbtn').textContent = on ? 'מפה' : 'סגירת המפה'; };
+mapOff(true); $('mapbtn').addEventListener('click', () => mapOff(!document.body.classList.contains('mapoff')));
+$('turn').style.opacity = 1; setTimeout(() => { $('turn').style.opacity = 0; }, 7000);
 addEventListener('message', e => { const m = e.data; if (!m || m.source !== 'tour41') return;
   if (m.action === 'enter') { const T = TOURS.find(t => t.id === m.flat); if (T) { if (mode === 'tour') leave().then(() => enter(T)); else enter(T); } }
   if (m.action === 'exit') leave(); });
